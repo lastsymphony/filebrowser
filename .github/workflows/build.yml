@@ -1,0 +1,32 @@
+name: Build ARM64 Binary
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm install
+          npm run build
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Build binary
+        run: GOOS=linux GOARCH=arm64 go build -o filebrowser-arm64
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: filebrowser-arm64
+          path: filebrowser-arm64
