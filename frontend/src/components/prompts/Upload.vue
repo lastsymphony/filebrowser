@@ -10,11 +10,20 @@
 
     <div class="card-action full">
       <div
-        @click="uploadFile"
-        @keypress.enter="uploadFile"
+        @click="uploadMedia"
+        @keypress.enter="uploadMedia"
         class="action"
         id="focus-prompt"
         tabindex="1"
+      >
+        <i class="material-icons">photo_library</i>
+        <div class="title">Media</div>
+      </div>
+      <div
+        @click="uploadFile"
+        @keypress.enter="uploadFile"
+        class="action"
+        tabindex="2"
       >
         <i class="material-icons">insert_drive_file</i>
         <div class="title">{{ t("buttons.file") }}</div>
@@ -23,7 +32,7 @@
         @click="uploadFolder"
         @keypress.enter="uploadFolder"
         class="action"
-        tabindex="2"
+        tabindex="3"
       >
         <i class="material-icons">folder</i>
         <div class="title">{{ t("buttons.folder") }}</div>
@@ -105,11 +114,14 @@ const uploadInput = async (event: Event) => {
   upload.handleFiles(uploadFiles, path);
 };
 
-const openUpload = (isFolder: boolean) => {
+const openUpload = (isFolder: boolean, accept?: string) => {
   const input = document.createElement("input");
   input.type = "file";
   input.multiple = true;
   input.webkitdirectory = isFolder;
+  if (accept) {
+    input.accept = accept;
+  }
   // TODO: call the function in FileListing.vue instead
   input.onchange = uploadInput;
   input.click();
@@ -120,5 +132,8 @@ const uploadFile = () => {
 };
 const uploadFolder = () => {
   openUpload(true);
+};
+const uploadMedia = () => {
+  openUpload(false, "image/*,video/*");
 };
 </script>
